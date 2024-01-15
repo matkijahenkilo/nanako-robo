@@ -1,7 +1,5 @@
 package org.matkija.bot
 
-import dev.minn.jda.ktx.events.awaitButton
-import dev.minn.jda.ktx.events.onButton
 import dev.minn.jda.ktx.events.onCommand
 import dev.minn.jda.ktx.interactions.components.primary
 import dev.minn.jda.ktx.jdabuilder.default
@@ -10,10 +8,11 @@ import dev.minn.jda.ktx.messages.into
 import dev.minn.jda.ktx.messages.reply_
 import kotlinx.coroutines.withTimeoutOrNull
 import net.dv8tion.jda.api.entities.emoji.Emoji
+import org.matkija.bot.discordBot.abstracts.SlashCommand
+import org.matkija.bot.discordBot.commands.gallerydl.GalleryDLCommand
+import org.matkija.bot.discordBot.commands.ping.Ping
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
-import org.matkija.bot.discordBot.listener.EventListener
 import java.io.File
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 private fun getToken(): String {
@@ -33,6 +32,11 @@ fun main() {
 
     SlashCommandHelper.updateCommands(jda)
 
+    val commands = HashMap<String, SlashCommand>()
+    commands["ping"] = Ping()
+    commands[SlashCommandHelper.GALLERY_DL] = GalleryDLCommand()
+
+
     jda.onCommand("ping") { event ->
         val confirm = primary("lol:ping", emoji = Emoji.fromUnicode("🎈"))
         event.reply_(
@@ -51,12 +55,6 @@ fun main() {
 
     jda.onCommand(SlashCommandHelper.GALLERY_DL) { event ->
         val value = event.getOption(SlashCommandHelper.GALLERY_DL_LINK)?.asString
-        event.reply("Nice. Added $value").queue()
+        commands[SlashCommandHelper.GALLERY_DL]?.tryExecute(event, value)
     }
-
-    jda.onButton("lol:ping") { event ->
-        event.reply("clicked!").setEphemeral(true).queue()
-    }
-
-    jda.addEventListener(EventListener())
 }

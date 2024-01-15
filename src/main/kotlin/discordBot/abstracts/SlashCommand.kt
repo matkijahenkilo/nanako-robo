@@ -1,18 +1,18 @@
 package org.matkija.bot.discordBot.abstracts
 
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
 
 
 abstract class SlashCommand {
 
-    fun tryExecute(event: SlashCommandInteractionEvent) {
+    fun tryExecute(event: GenericCommandInteractionEvent, arg: String?) {
         try {
-            execute(event)
+            execute(event, arg)
         } catch (e: Exception) {
             event.reply("```${e.message}```").setEphemeral(true).queue()
         }
     }
 
-    protected abstract fun execute(event: SlashCommandInteractionEvent)
+    protected abstract fun execute(event: GenericCommandInteractionEvent, arg: String?)
 
 }
