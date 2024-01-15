@@ -1,7 +1,6 @@
 package org.matkija.bot
 
 import net.dv8tion.jda.api.JDABuilder
-import net.dv8tion.jda.api.requests.GatewayIntent
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
 import org.matkija.bot.discordBot.listener.EventListener
 import java.io.File
@@ -20,11 +19,6 @@ fun main() {
     val token = getToken()
 
     val jda = JDABuilder.createDefault(token)
-        .enableIntents(
-            GatewayIntent.GUILD_MESSAGES,
-            GatewayIntent.GUILD_MEMBERS,
-            GatewayIntent.MESSAGE_CONTENT,
-        )
         .addEventListeners(EventListener())
         .build()
 

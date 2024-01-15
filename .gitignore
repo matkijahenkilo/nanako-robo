@@ -39,3 +39,6 @@ build/
 
 ### Dev config ###
 data/config*
+
+### Not necessary ###
+assets/*
