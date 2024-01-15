@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.matkija.bot.discordBot.abstracts.SlashCommand
 import org.matkija.bot.discordBot.commands.ping.Ping
+import org.matkija.bot.galleryDL.GalleryDL
 
 
 class EventListener : ListenerAdapter() {
