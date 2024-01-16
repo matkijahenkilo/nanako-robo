@@ -10,25 +10,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-/* script
-drop table links;
-
-create table links (
-	id 		  serial primary key,
-	link	  varchar(255) not null,
-	artist    varchar(255),
-	dateAdded date
-);
-
-insert into links(link, artist, dateAdded) VALUES(
-	'a nice link',
-	'a nice person',
-	'a nice date'
-);
-
-select * from links;
- */
-
 class GalleryDLCommand : SlashCommand() {
 
     private fun save(link: String, databaseHandler: DatabaseHandler) {
