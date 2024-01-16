@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.matkija.bot.discordBot.commands.gallerydl.GalleryDLCommand
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
+import org.matkija.bot.galleryDL.AutoDownloader
 import org.matkija.bot.sql.DatabaseHandler
 import java.io.File
 import kotlin.system.exitProcess
@@ -46,5 +47,7 @@ fun main() {
         GalleryDLCommand().tryExecute(event, databaseHandler)
         SlashCommandHelper.updateCommands(jda, databaseHandler)
     }
+
+    AutoDownloader().startDailyDownload(databaseHandler)
 
 }

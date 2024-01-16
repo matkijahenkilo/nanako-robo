@@ -43,7 +43,6 @@ object SlashCommandHelper {
         val links = databaseHandler.readData("SELECT * FROM ${DatabaseAttributes.TABLE_NAME}")
 
         links.forEach { link ->
-            println(link.link)
             option.addChoice(link.link, link.id)
         }
 
