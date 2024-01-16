@@ -22,11 +22,17 @@ class DatabaseHandler(server: Server) {
         val rs = st.executeQuery(statement)
         val ret = mutableListOf<String>()
         while (rs.next()) {
-            ret.add(rs.getString(2))
+            ret.add(rs.getString(1))
         }
         rs.close()
         st.close()
         return ret
+    }
+
+    fun saveData(statement: String) {
+        val st = conn.prepareStatement(statement)
+        st.executeUpdate()
+        st.close()
     }
 
 }
