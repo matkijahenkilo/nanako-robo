@@ -1,60 +1,49 @@
 package org.matkija.bot
 
 import dev.minn.jda.ktx.events.onCommand
-import dev.minn.jda.ktx.interactions.components.primary
 import dev.minn.jda.ktx.jdabuilder.default
-import dev.minn.jda.ktx.messages.editMessage
-import dev.minn.jda.ktx.messages.into
-import dev.minn.jda.ktx.messages.reply_
-import kotlinx.coroutines.withTimeoutOrNull
-import net.dv8tion.jda.api.entities.emoji.Emoji
-import org.matkija.bot.discordBot.abstracts.SlashCommand
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.matkija.bot.discordBot.commands.gallerydl.GalleryDLCommand
-import org.matkija.bot.discordBot.commands.ping.Ping
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
+import org.matkija.bot.sql.DatabaseHandler
 import java.io.File
-import kotlin.time.Duration.Companion.seconds
+import kotlin.system.exitProcess
 
-private fun getToken(): String {
-    val path = "data/config"
+@Serializable
+data class Server(val ip: String, val database: String, val user: String, val password: String)
+@Serializable
+data class Bot(val name: String, val token: String)
+@Serializable
+data class Config(val bots: List<Bot>, val server: Server)
+
+private fun getConfig(): Config? {
+    val path = "data/config.json"
     try {
-        return File(path).readText()
+        return Json.decodeFromString<Config>(File(path).readText())
     } catch (e: Exception) {
         e.printStackTrace()
-        return ""
+        return null
     }
 }
 
 fun main() {
-    val token = getToken()
 
-    val jda = default(token, enableCoroutines = true)
+    val config = getConfig()
+
+    if (config!!.equals(null)) {
+        exitProcess(2)
+    }
+
+    println("Connecting to database...")
+    val databaseHandler = DatabaseHandler(config.server)
+    println("Connecting to discord as an application...")
+    val jda = default(config.bots[0].token, enableCoroutines = true)
 
     SlashCommandHelper.updateCommands(jda)
 
-    val commands = HashMap<String, SlashCommand>()
-    commands["ping"] = Ping()
-    commands[SlashCommandHelper.GALLERY_DL] = GalleryDLCommand()
-
-
-    jda.onCommand("ping") { event ->
-        val confirm = primary("lol:ping", emoji = Emoji.fromUnicode("🎈"))
-        event.reply_(
-            "pongu?",
-            components = confirm.into(),
-            ephemeral = true
-        ).queue()
-
-        withTimeoutOrNull(5.seconds) { // 1 minute scoped timeout
-            event.hook.editMessage(
-                content = "All done~",
-                components = emptyList()
-            ).queue()
-        } ?: event.hook.editMessage(/*id="@original" is default */content="Timed out.", components=emptyList()).queue()
-    }
-
     jda.onCommand(SlashCommandHelper.GALLERY_DL) { event ->
-        val value = event.getOption(SlashCommandHelper.GALLERY_DL_LINK)?.asString
-        commands[SlashCommandHelper.GALLERY_DL]?.tryExecute(event, value)
+        GalleryDLCommand().tryExecute(event, databaseHandler)
     }
+
 }

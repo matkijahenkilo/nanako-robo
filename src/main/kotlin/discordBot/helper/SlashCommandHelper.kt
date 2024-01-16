@@ -11,6 +11,7 @@ object SlashCommandHelper {
     const val GALLERY_DL_LINK = "link"
     const val GALLERY_DL_SAVE = "save"
     const val GALLERY_DL_REMOVE = "remove"
+    const val GALLERY_DL_LIST = "list"
 
     fun updateCommands(jda: JDA) {
         val commands = jda.updateCommands()
@@ -23,7 +24,8 @@ object SlashCommandHelper {
                 SubcommandData(GALLERY_DL_SAVE, "Saves a link to back up it's contents everyday")
                     .addOption(OptionType.STRING, GALLERY_DL_LINK, "A link that gallery-dl can parse", true),
                 SubcommandData(GALLERY_DL_REMOVE, "Removes a link from my database")
-                    .addOption(OptionType.STRING, GALLERY_DL_LINK, "A link that gallery-dl can parse", true)
+                    .addOption(OptionType.STRING, GALLERY_DL_LINK, "A link that gallery-dl can parse", true),
+                SubcommandData(GALLERY_DL_LIST, "Shows you a list of saved links")
             )
 
         )
