@@ -2,7 +2,8 @@ package org.matkija.bot.discordBot.commands.gallerydl
 
 import dev.minn.jda.ktx.messages.editMessage
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
-import org.matkija.bot.discordBot.abstracts.SlashCommand
+import org.matkija.bot.abstracts.SlashCommand
+import org.matkija.bot.discordBot.helper.DatabaseAttributes
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
 import org.matkija.bot.sql.DatabaseHandler
 import java.time.LocalDateTime
@@ -34,19 +35,22 @@ class GalleryDLCommand : SlashCommand() {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val date = LocalDateTime.now().format(formatter)
 
-        databaseHandler.saveData(INSERT.format(link, null, date)) //TODO Find a way to index author's account name
+        //TODO Find a way to index author's account name
+        databaseHandler.prepareStatement(DatabaseAttributes.INSERT.format(link, null, date))
 
     }
 
-    private fun remove(link: String) {
-        //TODO postgres stuff
+    private fun remove(link: String, databaseHandler: DatabaseHandler) {
+
+        databaseHandler.prepareStatement(DatabaseAttributes.DELETE.format(link))
+
     }
 
     override fun execute(event: GenericCommandInteractionEvent, databaseHandler: DatabaseHandler) {
 
-        val link = event.getOption(SlashCommandHelper.GALLERY_DL_LINK)?.asString
+        val arg = event.getOption(SlashCommandHelper.GALLERY_DL_LINK)?.asString
 
-        if (link.isNullOrEmpty()) {
+        if (arg.isNullOrEmpty()) {
             event.reply("Value is empty!").queue()
             return
         }
@@ -54,36 +58,34 @@ class GalleryDLCommand : SlashCommand() {
         event.deferReply().queue()
 
         when (event.subcommandName) {
+
             SlashCommandHelper.GALLERY_DL_SAVE   -> {
-                save(link, databaseHandler)
-                event.hook.editMessage(content = "Added <$link>!").queue()
+
+                save(arg, databaseHandler)
+                event.hook.editMessage(content = "Added <$arg>!").queue()
+
             }
+
             SlashCommandHelper.GALLERY_DL_REMOVE -> {
-                remove(link)
-                event.hook.editMessage(content = "Removed <$link>!").queue()
+
+                val removedLink = databaseHandler.readData(DatabaseAttributes.SELECT_WHERE_ID.format(arg))[0]
+                remove(arg, databaseHandler)
+                event.hook.editMessage(content = "Removed <${removedLink.link}>!").queue()
+
             }
+
             SlashCommandHelper.GALLERY_DL_LIST -> {
-                databaseHandler.readData(SELECT.format(LINK)).forEach {
+
+                databaseHandler.readData(DatabaseAttributes.SELECT).forEach {
                     println(it)
                 }
+
             }
+
             else -> event.hook.editMessage(content = "I didn't do shit!").queue()
+
         }
 
-    }
-
-    companion object {
-        const val TABLE_NAME = "links"
-
-        //attributes
-        const val ID = "id"
-        const val LINK = "link"
-        const val ARTIST = "artist"
-        const val DATE_ADDED = "dateAdded"
-
-        //sql
-        const val SELECT = "SELECT %s FROM $TABLE_NAME"
-        const val INSERT = "INSERT INTO $TABLE_NAME($LINK, $ARTIST, $DATE_ADDED) VALUES('%s', '%s', '%s')"
     }
 
 }

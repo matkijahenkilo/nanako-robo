@@ -17,19 +17,26 @@ class DatabaseHandler(server: Server) {
         conn = DriverManager.getConnection(url, props)
     }
 
-    fun readData(statement: String) : MutableList<String> {
+    fun readData(statement: String) : MutableList<LinksTable> {
         val st = conn.createStatement()
         val rs = st.executeQuery(statement)
-        val ret = mutableListOf<String>()
+        val ret = mutableListOf<LinksTable>()
         while (rs.next()) {
-            ret.add(rs.getString(1))
+            ret.add(
+                LinksTable(
+                    id = rs.getLong(1),
+                    link = rs.getString(2),
+                    artist = rs.getString(3),
+                    dateAdded = rs.getString(4)
+                )
+            )
         }
         rs.close()
         st.close()
         return ret
     }
 
-    fun saveData(statement: String) {
+    fun prepareStatement(statement: String) {
         val st = conn.prepareStatement(statement)
         st.executeUpdate()
         st.close()

@@ -1,4 +1,4 @@
-package org.matkija.bot.discordBot.abstracts
+package org.matkija.bot.abstracts
 
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
 import org.matkija.bot.sql.DatabaseHandler

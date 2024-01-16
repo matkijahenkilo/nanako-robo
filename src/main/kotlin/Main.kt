@@ -40,10 +40,11 @@ fun main() {
     println("Connecting to discord as an application...")
     val jda = default(config.bots[0].token, enableCoroutines = true)
 
-    SlashCommandHelper.updateCommands(jda)
+    SlashCommandHelper.updateCommands(jda, databaseHandler)
 
     jda.onCommand(SlashCommandHelper.GALLERY_DL) { event ->
         GalleryDLCommand().tryExecute(event, databaseHandler)
+        SlashCommandHelper.updateCommands(jda, databaseHandler)
     }
 
 }
