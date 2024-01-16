@@ -1,6 +1,7 @@
 package org.matkija.bot
 
 import dev.minn.jda.ktx.events.onCommand
+import dev.minn.jda.ktx.events.onCommandAutocomplete
 import dev.minn.jda.ktx.jdabuilder.default
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -41,11 +42,19 @@ fun main() {
     println("Connecting to discord as an application...")
     val jda = default(config.bots[0].token, enableCoroutines = true)
 
-    SlashCommandHelper.updateCommands(jda, databaseHandler)
+    SlashCommandHelper.updateCommands(jda)
 
     jda.onCommand(SlashCommandHelper.GALLERY_DL) { event ->
         GalleryDLCommand().tryExecute(event, databaseHandler)
-        SlashCommandHelper.updateCommands(jda, databaseHandler)
+        SlashCommandHelper.updateCommands(jda)
+    }
+
+    jda.onCommandAutocomplete(SlashCommandHelper.GALLERY_DL) {event ->
+        val options = SlashCommandHelper.getLinks(databaseHandler)
+
+        event.replyChoices(options.choices.filter {
+            it.name.contains(event.focusedOption.value)
+        }).queue()
     }
 
     AutoDownloader().start(databaseHandler, 86400) // 24 hours in seconds
