@@ -9,6 +9,7 @@ import org.matkija.bot.sql.DatabaseHandler
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+
 /* script
 drop table links;
 
@@ -52,6 +53,11 @@ class GalleryDLCommand : SlashCommand() {
 
         if (arg.isNullOrEmpty()) {
             event.reply("Value is empty!").queue()
+            return
+        }
+
+        if (!arg.contains("https://")) {
+            event.reply("Link is not valid!").queue()
             return
         }
 
