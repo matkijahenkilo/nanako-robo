@@ -56,7 +56,8 @@ class GalleryDLCommand : SlashCommand() {
             return
         }
 
-        if (!arg.contains("https://")) {
+        // arg can be either Long or String
+        if (arg.toLongOrNull() == null && !arg.contains("https://")) {
             event.reply("Link is not valid!").queue()
             return
         }
