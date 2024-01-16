@@ -24,9 +24,25 @@ class GalleryDL(
         }
     }
 
-    fun download(): String? {
+    fun download(): String {
         val command = "%s %s".format(GALLERYDL, link)
-        return command.run(WORKINGDIR)
+        val output: List<String>
+        var ret = ""
+
+        try {
+            output = command.run(WORKINGDIR)!!.split("\n")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return e.toString()
+        }
+
+        output.forEach {line ->
+            if (!line.contains("# ")) {
+                ret = ret.plus("$line\n")
+            }
+        }
+
+        return ret
     }
 
     companion object {
