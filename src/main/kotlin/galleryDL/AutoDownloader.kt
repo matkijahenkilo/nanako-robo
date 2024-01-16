@@ -11,18 +11,20 @@ class AutoDownloader {
 
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
-    fun startDailyDownload(databaseHandler: DatabaseHandler) {
-        val beeper = Runnable {
-            println("Downloading links from database...")
+    fun start(databaseHandler: DatabaseHandler, period: Long) {
+        val downloader = Runnable {
+            println("Fetching links from database...")
             val links = databaseHandler.readData(DatabaseAttributes.SELECT)
+            println("Downloading links from database...")
 
-            links.forEach {link ->
+            links.forEach { link ->
                 println("Downloading media from ${link.link}")
-                GalleryDL(link.link).download()
+                println(GalleryDL(link.link).download())
             }
 
+            println("Finished downloading everything!")
         }
 
-        scheduler.scheduleAtFixedRate(beeper, 1, 86400, TimeUnit.SECONDS)
+        scheduler.scheduleAtFixedRate(downloader, 1, period, TimeUnit.SECONDS)
     }
 }
