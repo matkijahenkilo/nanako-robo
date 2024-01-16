@@ -18,7 +18,7 @@ class GalleryDL(
 
             child.waitFor()
             return child.inputStream.bufferedReader().readText()
-        } catch(e: IOException) {
+        } catch (e: IOException) {
             e.printStackTrace()
             return null
         }
@@ -36,7 +36,7 @@ class GalleryDL(
             return e.toString()
         }
 
-        output.forEach {line ->
+        output.forEach { line ->
             if (!line.contains("# ")) {
                 ret = ret.plus("$line\n")
             }

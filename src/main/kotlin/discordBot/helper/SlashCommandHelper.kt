@@ -29,7 +29,7 @@ object SlashCommandHelper {
                 SubcommandData(GALLERY_DL_LIST, "Shows you a list of saved links")
             ),
 
-        )
+            )
 
         commands.queue()
     }

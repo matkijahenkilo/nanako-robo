@@ -47,6 +47,10 @@ class GalleryDLCommand : SlashCommand() {
 
     }
 
+    private fun isAlreadySaved(link: String, databaseHandler: DatabaseHandler): Boolean {
+        TODO("I'm lazy.")
+    }
+
     override fun execute(event: GenericCommandInteractionEvent, databaseHandler: DatabaseHandler) {
 
         val arg = event.getOption(SlashCommandHelper.GALLERY_DL_LINK)?.asString
@@ -66,7 +70,7 @@ class GalleryDLCommand : SlashCommand() {
 
         when (event.subcommandName) {
 
-            SlashCommandHelper.GALLERY_DL_SAVE   -> {
+            SlashCommandHelper.GALLERY_DL_SAVE -> {
 
                 save(arg, databaseHandler)
                 event.hook.editMessage(content = "Added <$arg>!").queue()

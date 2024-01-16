@@ -14,8 +14,10 @@ import kotlin.system.exitProcess
 
 @Serializable
 data class Server(val ip: String, val database: String, val user: String, val password: String)
+
 @Serializable
 data class Bot(val name: String, val token: String)
+
 @Serializable
 data class Config(val bots: List<Bot>, val server: Server)
 
@@ -49,7 +51,7 @@ fun main() {
         SlashCommandHelper.updateCommands(jda)
     }
 
-    jda.onCommandAutocomplete(SlashCommandHelper.GALLERY_DL) {event ->
+    jda.onCommandAutocomplete(SlashCommandHelper.GALLERY_DL) { event ->
         val options = SlashCommandHelper.getLinks(databaseHandler)
 
         event.replyChoices(options.choices.filter {

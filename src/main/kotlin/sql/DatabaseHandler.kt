@@ -17,7 +17,7 @@ class DatabaseHandler(server: Server) {
         conn = DriverManager.getConnection(url, props)
     }
 
-    fun readData(statement: String) : MutableList<LinksTable> {
+    fun readData(statement: String): MutableList<LinksTable> {
         val st = conn.createStatement()
         val rs = st.executeQuery(statement)
         val ret = mutableListOf<LinksTable>()
