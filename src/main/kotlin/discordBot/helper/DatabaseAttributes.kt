@@ -1,5 +1,6 @@
 package org.matkija.bot.discordBot.helper
 
+//isso é AMALDIÇOADO, arruma essa PORRA
 object DatabaseAttributes {
 
     const val TABLE_NAME = "links"

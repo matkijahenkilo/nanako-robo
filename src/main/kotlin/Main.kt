@@ -5,7 +5,7 @@ import dev.minn.jda.ktx.events.onCommandAutocomplete
 import dev.minn.jda.ktx.jdabuilder.default
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.matkija.bot.discordBot.commands.gallerydl.GalleryDLCommand
+import org.matkija.bot.discordBot.commands.gallerydl.GallerydlManager
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
 import org.matkija.bot.galleryDL.AutoDownloader
 import org.matkija.bot.sql.DatabaseHandler
@@ -47,7 +47,7 @@ fun main() {
     SlashCommandHelper.updateCommands(jda)
 
     jda.onCommand(SlashCommandHelper.GALLERY_DL) { event ->
-        GalleryDLCommand().tryExecute(event, databaseHandler)
+        GallerydlManager().tryExecute(event, databaseHandler)
         SlashCommandHelper.updateCommands(jda)
     }
 

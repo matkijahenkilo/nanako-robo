@@ -1,6 +1,7 @@
 package org.matkija.bot.sql
 
 import org.matkija.bot.Server
+import org.matkija.bot.discordBot.helper.DatabaseAttributes
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.*
@@ -36,7 +37,10 @@ class DatabaseHandler(server: Server) {
         return ret
     }
 
-    fun prepareStatement(statement: String) {
+    fun selectAll(): MutableList<LinksTable> =
+        readData("SELECT * FROM %s".format(DatabaseAttributes.TABLE_NAME))
+
+    fun runStatement(statement: String) {
         val st = conn.prepareStatement(statement)
         st.executeUpdate()
         st.close()
