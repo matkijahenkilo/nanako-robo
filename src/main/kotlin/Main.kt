@@ -52,7 +52,6 @@ fun main() {
 
     jda.onCommand(SlashCommandHelper.GALLERY_DL) { event ->
         GallerydlManager().tryExecute(event, databaseHandler)
-        SlashCommandHelper.updateCommands(jda)
     }
 
     jda.onCommandAutocomplete(SlashCommandHelper.GALLERY_DL) { event ->

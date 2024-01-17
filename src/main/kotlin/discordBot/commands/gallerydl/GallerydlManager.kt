@@ -86,14 +86,14 @@ class GallerydlManager : SlashCommand() {
                     save(it, databaseHandler)
                 }
 
-                event.hook.editMessage(content = "Added:\n<$args>").queue()
+                event.hook.editMessage(content = "Added:\n$args").queue()
 
             }
 
             SlashCommandHelper.GALLERY_DL_REMOVE -> {
 
                 if (!isValid(arg!!)) {
-                    event.hook.editMessage(content = "Link is not valid!").queue()
+                    event.hook.editMessage(content = "Value is not valid!").queue()
                     return
                 }
                 val removedLink = databaseHandler.readData(DatabaseAttributes.SELECT_WHERE_ID.format(arg))[0]
@@ -109,10 +109,10 @@ class GallerydlManager : SlashCommand() {
                     return
                 }
 
-                val args = filterAlreadyExistingLinks(arg.split(' '), databaseHandler.selectLink())
+                val args = arg.split(' ')
 
                 if (args.isEmpty()) {
-                    event.hook.editMessage(content = "Every link was already added.").queue()
+                    event.hook.editMessage(content = "Could not get anything from string.").queue()
                     return
                 }
 
@@ -120,12 +120,12 @@ class GallerydlManager : SlashCommand() {
                     Gallerydl().download(it)
                 }
 
-                event.hook.editMessage(content = "Downloaded files from <$args>\nNew files shown in the terminal.")
+                event.hook.editMessage(content = "Downloaded files from $args\nNew downloaded files shown in the terminal.")
                     .queue()
 
             }
 
-            SlashCommandHelper.GALLERY_DL_LIST -> {
+            SlashCommandHelper.GALLERY_DL_LIST -> { // TODO: show list with buttons on discord
 
                 databaseHandler.readData(DatabaseAttributes.SELECT).forEach {
                     println(it)
@@ -135,12 +135,15 @@ class GallerydlManager : SlashCommand() {
 
             SlashCommandHelper.GALLERY_DL_RUN_AUTO_DOWNLOADER -> {
 
+                event.hook.editMessage(content = "Started scheduled downloader manually...").queue()
+
                 runBlocking {
                     launch {
                         Gallerydl().downloadFromList(databaseHandler.selectAll())
                     }
                 }
-                event.hook.editMessage(content = "Downloaded files from <$arg>").queue()
+
+                event.hook.editMessage(content = "Finished downloading media manually.").queue()
 
             }
 
