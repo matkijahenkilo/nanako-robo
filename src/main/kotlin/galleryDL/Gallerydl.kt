@@ -10,8 +10,9 @@ import java.io.InputStreamReader
 
 class Gallerydl {
 
-    private suspend fun String.run(workingDir: File) {
+    private suspend fun String.run() {
         try {
+            val workingDir = File("assets/")
             var line: String?
             val parts = this.split("\\s".toRegex())
             val child = withContext(Dispatchers.IO) {
@@ -35,7 +36,7 @@ class Gallerydl {
 
     fun download(link: String) {
         val command = "%s %s".format(GALLERYDL, link)
-        runBlocking { command.run(WORKINGDIR) }
+        runBlocking { command.run() }
     }
 
     suspend fun downloadFromList(links: List<LinksTable>) {
@@ -52,7 +53,6 @@ class Gallerydl {
 
     companion object {
         private const val GALLERYDL = "gallery-dl"
-        private val WORKINGDIR = File("assets/")
     }
 
 }
