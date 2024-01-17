@@ -2,7 +2,7 @@ package org.matkija.bot
 
 import dev.minn.jda.ktx.events.onCommand
 import dev.minn.jda.ktx.events.onCommandAutocomplete
-import dev.minn.jda.ktx.jdabuilder.default
+import dev.minn.jda.ktx.jdabuilder.light
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.matkija.bot.discordBot.commands.gallerydl.GallerydlManager
@@ -46,7 +46,7 @@ fun main() {
 
     println("Connecting to discord as an application...")
     println("Logging in as ${bot.name}")
-    val jda = default(bot.token, enableCoroutines = true)
+    val jda = light(bot.token, enableCoroutines = true)
 
     SlashCommandHelper.updateCommands(jda)
 
