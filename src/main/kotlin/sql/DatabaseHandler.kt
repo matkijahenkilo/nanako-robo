@@ -18,7 +18,7 @@ class DatabaseHandler(server: Server) {
         conn = DriverManager.getConnection(url, props)
     }
 
-    fun readData(statement: String): MutableList<LinksTable> {
+    fun readData(statement: String): List<LinksTable> {
         val st = conn.createStatement()
         val rs = st.executeQuery(statement)
         val ret = mutableListOf<LinksTable>()
@@ -37,8 +37,20 @@ class DatabaseHandler(server: Server) {
         return ret
     }
 
-    fun selectAll(): MutableList<LinksTable> =
-        readData("SELECT * FROM %s".format(DatabaseAttributes.TABLE_NAME))
+    fun selectAll(): List<LinksTable> =
+        readData(DatabaseAttributes.SELECT)
+
+    fun selectLink(): List<String> {
+        val st = conn.createStatement()
+        val rs = st.executeQuery(DatabaseAttributes.SELECT_LINK)
+        val ret = mutableListOf<String>()
+        while (rs.next()) {
+            ret.add(rs.getString(1))
+        }
+        rs.close()
+        st.close()
+        return ret
+    }
 
     fun runStatement(statement: String) {
         val st = conn.prepareStatement(statement)

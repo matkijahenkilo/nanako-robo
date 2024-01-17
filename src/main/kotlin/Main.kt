@@ -60,5 +60,4 @@ fun main() {
     }
 
     AutoDownloader().start(databaseHandler, 86400) // 24 hours in seconds
-
 }

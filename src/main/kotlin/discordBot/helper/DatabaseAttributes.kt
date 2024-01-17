@@ -13,6 +13,7 @@ object DatabaseAttributes {
 
     //sql
     const val SELECT = "SELECT * FROM $TABLE_NAME"
+    const val SELECT_LINK = "SELECT link FROM $TABLE_NAME"
     const val SELECT_WHERE_ID = "$SELECT WHERE $ID = %s"
     const val INSERT = "INSERT INTO $TABLE_NAME ($LINK, $ARTIST, $DATE_ADDED) VALUES ('%s', '%s', '%s')"
     const val DELETE = "DELETE FROM $TABLE_NAME WHERE $ID = %s"
