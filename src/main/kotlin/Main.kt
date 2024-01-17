@@ -39,10 +39,14 @@ fun main() {
         exitProcess(2)
     }
 
+    val bot = config.bots[0]
+
     println("Connecting to database...")
     val databaseHandler = DatabaseHandler(config.server)
+
     println("Connecting to discord as an application...")
-    val jda = default(config.bots[0].token, enableCoroutines = true)
+    println("Logging in as ${bot.name}")
+    val jda = default(bot.token, enableCoroutines = true)
 
     SlashCommandHelper.updateCommands(jda)
 
