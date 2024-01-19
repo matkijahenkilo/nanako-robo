@@ -15,10 +15,11 @@ data class GallerydlDir(val path: String)
 class Gallerydl {
 
     private val config = Json.decodeFromString<GallerydlDir>(File("data/gallerydldir.json").readText())
+    private val arguments = "--cookies cookies.txt --ugoira-conv -d ${config.path}"
 
     private suspend fun String.run() {
         try {
-            val workingDir = File(config.path)
+            val workingDir = File("./")
             var line: String?
             val parts = this.split("\\s".toRegex())
             val child = withContext(Dispatchers.IO) {
@@ -41,7 +42,7 @@ class Gallerydl {
     }
 
     fun download(link: String) {
-        val command = "%s %s".format(GALLERYDL, link)
+        val command = "%s %s %s".format(GALLERYDL, arguments, link)
         runBlocking { command.run() }
     }
 
