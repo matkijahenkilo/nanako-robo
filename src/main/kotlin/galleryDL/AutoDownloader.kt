@@ -6,6 +6,8 @@ import org.matkija.bot.sql.DatabaseHandler
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 class AutoDownloader {
@@ -20,7 +22,12 @@ class AutoDownloader {
             println("Finished downloading everything!")
         }
 
-        val initialDelay: Long = 120 // 2 minutes of delay to avoid annoyance everytime I run the bot lol
+        val initialDelay: Long = 120
+
+        // initialDelay.seconds prints 2m
+        // while initialDelay.minutes prints 2h
+        // ...confusing
+        println("Downloading contents automatically in ${initialDelay.seconds}")
 
         scheduler.scheduleAtFixedRate(downloader, initialDelay, period, TimeUnit.SECONDS)
 
