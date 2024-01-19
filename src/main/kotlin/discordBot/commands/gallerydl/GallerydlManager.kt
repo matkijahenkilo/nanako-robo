@@ -64,18 +64,41 @@ class GallerydlManager : SlashCommand() {
 
     override fun execute(event: GenericCommandInteractionEvent, databaseHandler: DatabaseHandler) {
 
+        event.deferReply().queue()
+
+        when (event.subcommandName) {
+            SlashCommandHelper.GALLERY_DL_LIST -> { // TODO: show list with buttons on discord
+
+                databaseHandler.readData(DatabaseAttributes.SELECT).forEach {
+                    println(it)
+                }
+                return
+            }
+            SlashCommandHelper.GALLERY_DL_RUN_AUTO_DOWNLOADER -> {
+
+                event.hook.editMessage(content = "Started scheduled downloader manually...").queue()
+
+                runBlocking {
+                    launch {
+                        Gallerydl().downloadFromList(databaseHandler.selectAll())
+                    }
+                }
+
+                event.hook.editMessage(content = "Finished downloading media manually.").queue()
+                return
+            }
+        }
+
         val arg = event.getOption(SlashCommandHelper.GALLERY_DL_LINK)?.asString
 
-        event.deferReply().queue()
+        if (!isValid(arg!!)) {
+            event.hook.editMessage(content = "Link is not valid!").queue()
+            return
+        }
 
         when (event.subcommandName) {
 
             SlashCommandHelper.GALLERY_DL_SAVE -> {
-
-                if (!isValid(arg!!)) {
-                    event.hook.editMessage(content = "Link is not valid!").queue()
-                    return
-                }
 
                 val args = filterAlreadyExistingLinks(arg.split(' '), databaseHandler.selectLink())
                 if (args.isEmpty()) {
@@ -92,10 +115,6 @@ class GallerydlManager : SlashCommand() {
 
             SlashCommandHelper.GALLERY_DL_REMOVE -> {
 
-                if (!isValid(arg!!)) {
-                    event.hook.editMessage(content = "Value is not valid!").queue()
-                    return
-                }
                 val removedLink = databaseHandler.readData(DatabaseAttributes.SELECT_WHERE_ID.format(arg))[0]
                 remove(arg, databaseHandler)
                 event.hook.editMessage(content = "Removed:\n<${removedLink.link}>").queue()
@@ -104,11 +123,6 @@ class GallerydlManager : SlashCommand() {
 
             SlashCommandHelper.GALLERY_DL_RUN_MANUAL_DOWNLOAD -> {
 
-                if (!isValid(arg!!)) {
-                    event.hook.editMessage(content = "Link is not valid!").queue()
-                    return
-                }
-
                 val args = arg.split(' ')
 
                 if (args.isEmpty()) {
@@ -116,34 +130,14 @@ class GallerydlManager : SlashCommand() {
                     return
                 }
 
+                event.hook.editMessage(content = "Downloading media from $args...").queue()
+
                 args.forEach {
                     Gallerydl().download(it)
                 }
 
-                event.hook.editMessage(content = "Downloaded files from $args\nNew downloaded files shown in the terminal.")
+                event.hook.editMessage(content = "Downloaded media from $args\nNew downloaded files shown in the terminal.")
                     .queue()
-
-            }
-
-            SlashCommandHelper.GALLERY_DL_LIST -> { // TODO: show list with buttons on discord
-
-                databaseHandler.readData(DatabaseAttributes.SELECT).forEach {
-                    println(it)
-                }
-
-            }
-
-            SlashCommandHelper.GALLERY_DL_RUN_AUTO_DOWNLOADER -> {
-
-                event.hook.editMessage(content = "Started scheduled downloader manually...").queue()
-
-                runBlocking {
-                    launch {
-                        Gallerydl().downloadFromList(databaseHandler.selectAll())
-                    }
-                }
-
-                event.hook.editMessage(content = "Finished downloading media manually.").queue()
 
             }
 
