@@ -1,18 +1,23 @@
 package org.matkija.bot.galleryDL
 
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.Json
 import org.matkija.bot.sql.LinksTable
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 
+data class Dir(val name: String, val path: String)
 
 class Gallerydl {
 
+    //might not be the greatest idea
+    private val dir: Dir = Json.decodeFromString<Dir>(File("assets/gallerydldir.json").readText())
+
     private suspend fun String.run() {
         try {
-            val workingDir = File("assets/")
+            val workingDir = File(dir.path)
             var line: String?
             val parts = this.split("\\s".toRegex())
             val child = withContext(Dispatchers.IO) {
