@@ -40,7 +40,7 @@ class DatabaseHandler(server: Server) {
     fun selectAll(): List<LinksTable> =
         readData(DatabaseAttributes.SELECT)
 
-    fun selectLink(): List<String> {
+    fun selectAllLinks(): List<String> {
         val st = conn.createStatement()
         val rs = st.executeQuery(DatabaseAttributes.SELECT_LINK)
         val ret = mutableListOf<String>()

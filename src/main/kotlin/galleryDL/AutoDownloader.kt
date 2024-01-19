@@ -20,7 +20,9 @@ class AutoDownloader {
             println("Finished downloading everything!")
         }
 
-        scheduler.scheduleAtFixedRate(downloader, 1, period, TimeUnit.SECONDS)
+        val initialDelay: Long = 120 // 2 minutes of delay to avoid annoyance everytime I run the bot lol
+
+        scheduler.scheduleAtFixedRate(downloader, initialDelay, period, TimeUnit.SECONDS)
 
     }
 }

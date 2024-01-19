@@ -51,6 +51,8 @@ object SlashCommandHelper {
             optionData.addChoice(link.link, link.id)
         }
 
+        optionData.addChoice("everything", -1)
+
         return optionData
     }
 

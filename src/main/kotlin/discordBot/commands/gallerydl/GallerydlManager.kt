@@ -31,6 +31,12 @@ class GallerydlManager : SlashCommand() {
 
     }
 
+    private fun removeEverything(databaseHandler: DatabaseHandler) : List<String> {
+        val list = databaseHandler.selectAllLinks()
+        databaseHandler.runStatement(DatabaseAttributes.DELETE_ALL)
+        return list
+    }
+
     private fun filterAlreadyExistingLinks(newLinks: List<String>, dbLinks: List<String>): List<String> {
 
         val newValues = newLinks.toSet()
@@ -39,18 +45,16 @@ class GallerydlManager : SlashCommand() {
         if (existingValues.isEmpty()) {
             val ret = buildSet {
                 newValues.forEach {
-                    if (!it.contains("https://"))
-                        return@forEach
+                    if (!it.contains("https://")) return@forEach
                     add(it)
                 }
             }
-            return ret.toMutableList()
+            return ret.toList()
         }
 
         val ret = buildSet {
             newValues.forEach {
-                if (it in existingValues || !it.contains("https://"))
-                    return@forEach
+                if (it in existingValues || !it.contains("https://")) return@forEach
                 add(it)
             }
         }
@@ -101,7 +105,7 @@ class GallerydlManager : SlashCommand() {
 
             SlashCommandHelper.GALLERY_DL_SAVE -> {
 
-                val args = filterAlreadyExistingLinks(arg.split(' '), databaseHandler.selectLink())
+                val args = filterAlreadyExistingLinks(arg.split(' '), databaseHandler.selectAllLinks())
                 if (args.isEmpty()) {
                     event.hook.editMessage(content = "Every link you tried to save was already saved.").queue()
                     return
@@ -116,9 +120,16 @@ class GallerydlManager : SlashCommand() {
 
             SlashCommandHelper.GALLERY_DL_REMOVE -> {
 
-                val removedLink = databaseHandler.readData(DatabaseAttributes.SELECT_WHERE_ID.format(arg))[0]
-                remove(arg, databaseHandler)
-                event.hook.editMessage(content = "Removed:\n<${removedLink.link}>").queue()
+                if (arg.toInt() == -1) {
+                    val links = removeEverything(databaseHandler)
+                    var reply = "Removed entries:\n<$links>"
+                    if (reply.length > 1990) reply = reply.substring(1, 1990)
+                    event.hook.editMessage(content = reply).queue()
+                } else {
+                    val removedLink = databaseHandler.readData(DatabaseAttributes.SELECT_WHERE_ID.format(arg))[0]
+                    remove(arg, databaseHandler)
+                    event.hook.editMessage(content = "Removed:\n<${removedLink.link}>").queue()
+                }
 
             }
 

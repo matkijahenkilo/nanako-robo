@@ -17,5 +17,6 @@ object DatabaseAttributes {
     const val SELECT_WHERE_ID = "$SELECT WHERE $ID = %s"
     const val INSERT = "INSERT INTO $TABLE_NAME ($LINK, $ARTIST, $DATE_ADDED) VALUES ('%s', '%s', '%s')"
     const val DELETE = "DELETE FROM $TABLE_NAME WHERE $ID = %s"
+    const val DELETE_ALL = "DELETE FROM $TABLE_NAME"
 
 }
