@@ -74,6 +74,7 @@ class GallerydlManager : SlashCommand() {
                 }
                 return
             }
+
             SlashCommandHelper.GALLERY_DL_RUN_AUTO_DOWNLOADER -> {
 
                 event.hook.editMessage(content = "Started scheduled downloader manually...").queue()

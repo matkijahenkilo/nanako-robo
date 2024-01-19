@@ -10,13 +10,13 @@ import org.matkija.bot.sql.DatabaseHandler
 
 object SlashCommandHelper {
 
-    const val GALLERY_DL_RUN_AUTO_DOWNLOADER = "runautodownloader"
-    const val GALLERY_DL_RUN_MANUAL_DOWNLOAD = "manualdownload"
     const val GALLERY_DL = "gallery-dl"
     const val GALLERY_DL_LINK = "link"
     const val GALLERY_DL_SAVE = "save"
     const val GALLERY_DL_REMOVE = "remove"
     const val GALLERY_DL_LIST = "list"
+    const val GALLERY_DL_RUN_AUTO_DOWNLOADER = "run_auto_downloader"
+    const val GALLERY_DL_RUN_MANUAL_DOWNLOAD = "manual_download"
 
     fun updateCommands(jda: JDA) {
         val commands = jda.updateCommands()
