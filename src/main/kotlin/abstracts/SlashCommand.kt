@@ -11,6 +11,7 @@ abstract class SlashCommand {
         try {
             execute(event, databaseHandler)
         } catch (e: Exception) {
+            e.printStackTrace()
             if (event.isAcknowledged) {
                 event.hook.editMessage(content = "```${e.message}```").queue()
             } else {
