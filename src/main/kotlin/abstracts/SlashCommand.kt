@@ -1,5 +1,6 @@
 package org.matkija.bot.abstracts
 
+import dev.minn.jda.ktx.messages.editMessage
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
 import org.matkija.bot.sql.DatabaseHandler
 
@@ -10,7 +11,11 @@ abstract class SlashCommand {
         try {
             execute(event, databaseHandler)
         } catch (e: Exception) {
-            event.reply("```${e.message}```").setEphemeral(true).queue()
+            if (event.isAcknowledged) {
+                event.hook.editMessage(content = "```${e.message}```").queue()
+            } else {
+                event.reply("```${e.message}```").setEphemeral(true).queue()
+            }
         }
     }
 
