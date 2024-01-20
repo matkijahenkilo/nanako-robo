@@ -7,39 +7,10 @@ Her objective is to save [gallery-dl](https://github.com/mikf/gallery-dl)'s pars
 Current `assets/config.json` file style:
 
 ```json
-{
-  "bots": [
+[
     {
-      "name" : "bot name",
-      "token" : "token"
+        "name" : "bot name",
+        "token" : "token"
     }
-  ],
-  "server": {
-      "ip": "a machine ip",
-      "database": "postgres' database name",
-      "user": "postgres' user",
-      "password": "postgres' user's password"
-  }
-}
-```
-
-Postgres scripts:
-
-```sql
-DROP TABLE links;
-
-CREATE TABLE links (
-    id        SERIAL PRIMARY KEY,
-    link      varchar(255) NOT NULL,
-    artist    varchar(255),
-    dateAdded date
-);
-
-INSERT INTO links (link, artist, dateAdded) VALUES (
-    'a nice link',
-    'a nice person',
-    'a nice date'
-);
-
-SELECT * FROM links;
+]
 ```

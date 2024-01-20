@@ -47,3 +47,4 @@ out/*
 MANIFEST.MF
 nanako.jar
 start.bat
+*.db

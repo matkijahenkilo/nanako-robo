@@ -31,7 +31,7 @@ class GallerydlManager : SlashCommand() {
 
     }
 
-    private fun removeEverything(databaseHandler: DatabaseHandler) : List<String> {
+    private fun removeEverything(databaseHandler: DatabaseHandler): List<String> {
         val list = databaseHandler.selectAllLinks()
         databaseHandler.runStatement(DatabaseAttributes.DELETE_ALL)
         return list
@@ -73,9 +73,14 @@ class GallerydlManager : SlashCommand() {
         when (event.subcommandName) {
             SlashCommandHelper.GALLERY_DL_LIST -> { // TODO: show list with buttons on discord
 
+                println()
+
                 databaseHandler.readData(DatabaseAttributes.SELECT).forEach {
                     println(it)
                 }
+
+                event.hook.editMessage(content = "Aight, check terminal.").queue()
+
                 return
             }
 

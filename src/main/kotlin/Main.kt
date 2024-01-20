@@ -13,18 +13,11 @@ import java.io.File
 import kotlin.system.exitProcess
 
 @Serializable
-data class Server(val ip: String, val database: String, val user: String, val password: String)
-
-@Serializable
 data class Bot(val name: String, val token: String)
 
-@Serializable
-data class Config(val bots: List<Bot>, val server: Server)
-
-private fun getConfig(): Config? {
-    val path = "data/config.json"
+private fun getBotsConfig(): List<Bot>? {
     try {
-        return Json.decodeFromString<Config>(File(path).readText())
+        return Json.decodeFromString<List<Bot>>(File("data/config.json").readText())
     } catch (e: Exception) {
         e.printStackTrace()
         return null
@@ -33,16 +26,17 @@ private fun getConfig(): Config? {
 
 fun main() {
 
-    val config = getConfig()
+    val bots = getBotsConfig()
 
-    if (config!!.equals(null)) {
+    if (bots!!.equals(null)) {
         exitProcess(2)
     }
 
-    val bot = config.bots[0]
+    val bot = bots[0]
+    val dbName = "${bot.name}.db"
 
-    println("Connecting to database...")
-    val databaseHandler = DatabaseHandler(config.server)
+    println("Connecting to database $dbName...")
+    val databaseHandler = DatabaseHandler(dbName)
 
     println("Connecting to discord as an application...")
     println("Logging in as ${bot.name}")
