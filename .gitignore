@@ -45,6 +45,6 @@ data/config.json
 assets/*
 out/*
 MANIFEST.MF
-nanako.jar
+*.jar
 start.bat
 *.db
