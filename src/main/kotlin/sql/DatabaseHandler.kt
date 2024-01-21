@@ -11,7 +11,11 @@ class DatabaseHandler(dbName: String) {
     init {
         val url = "jdbc:sqlite:%s".format(dbName)
         conn = DriverManager.getConnection(url)
-        runStatement(
+        createTable(false)
+    }
+
+    fun createTable(reset: Boolean) {
+        val st =
             """
             CREATE TABLE IF NOT EXISTS ${DatabaseAttributes.TABLE_NAME} (
                 ${DatabaseAttributes.ID}         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +24,10 @@ class DatabaseHandler(dbName: String) {
                 ${DatabaseAttributes.DATE_ADDED} date
             )
         """.trimIndent()
-        )
+
+        if (reset)
+            runStatement("DROP TABLE ${DatabaseAttributes.TABLE_NAME}")
+        runStatement(st)
     }
 
     fun readData(statement: String): List<LinksTable> {

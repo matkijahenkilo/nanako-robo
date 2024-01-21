@@ -1,18 +1,9 @@
 package org.matkija.bot.discordBot.commands.gallerydl
 
-import dev.minn.jda.ktx.interactions.components.primary
-import dev.minn.jda.ktx.interactions.components.row
-import dev.minn.jda.ktx.messages.Embed
 import dev.minn.jda.ktx.messages.editMessage
-import dev.minn.jda.ktx.messages.into
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel.Layout
-import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
-import net.dv8tion.jda.api.interactions.components.LayoutComponent
-import net.dv8tion.jda.api.interactions.components.buttons.Button
-import okhttp3.Connection
 import org.matkija.bot.abstracts.SlashCommand
 import org.matkija.bot.discordBot.helper.DatabaseAttributes
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
@@ -39,7 +30,7 @@ class GallerydlManager : SlashCommand() {
 
     private fun removeEverything(databaseHandler: DatabaseHandler): List<String> {
         val list = databaseHandler.selectAllLinks()
-        databaseHandler.runStatement(DatabaseAttributes.DELETE_ALL)
+        databaseHandler.createTable(true)
         return list
     }
 
@@ -141,8 +132,9 @@ class GallerydlManager : SlashCommand() {
 
                 if (arg.toInt() == -1) {
                     val links = removeEverything(databaseHandler)
-                    var reply = "Removed entries:\n<$links>"
-                    if (reply.length > 1990) reply = reply.substring(1, 1990)
+                    var reply = "Removed entries:\n<$links>\nTable also got reset for convenience"
+                    if (reply.length > 1990)
+                        reply = reply.substring(1, 1990)
                     event.hook.editMessage(content = reply).queue()
                 } else {
                     val removedLink = databaseHandler.readData(DatabaseAttributes.SELECT_WHERE_ID.format(arg))[0]
