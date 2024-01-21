@@ -11,7 +11,8 @@ class DatabaseHandler(dbName: String) {
     init {
         val url = "jdbc:sqlite:%s".format(dbName)
         conn = DriverManager.getConnection(url)
-        runStatement("""
+        runStatement(
+            """
             CREATE TABLE IF NOT EXISTS ${DatabaseAttributes.TABLE_NAME} (
                 ${DatabaseAttributes.ID}         INTEGER PRIMARY KEY AUTOINCREMENT,
                 ${DatabaseAttributes.LINK}       varchar(255) NOT NULL,

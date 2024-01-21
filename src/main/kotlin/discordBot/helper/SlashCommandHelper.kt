@@ -48,7 +48,8 @@ object SlashCommandHelper {
         val links = databaseHandler.readData("SELECT * FROM ${DatabaseAttributes.TABLE_NAME}")
 
         links.forEach { link ->
-            optionData.addChoice(link.link, link.id)
+            val str = "%s - %s".format(link.artist, link.link)
+            optionData.addChoice(str, link.id)
         }
 
         optionData.addChoice("everything", -1)

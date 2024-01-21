@@ -19,17 +19,14 @@ class GallerydlManager : SlashCommand() {
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val date = LocalDateTime.now().format(formatter)
+        val name = Gallerydl().getUserName(link)
 
-        //TODO Find a way to index author's account name
-        databaseHandler.runStatement(DatabaseAttributes.INSERT.format(link, null, date))
+        databaseHandler.runStatement(DatabaseAttributes.INSERT.format(link, name, date))
 
     }
 
-    private fun remove(link: String, databaseHandler: DatabaseHandler) {
-
+    private fun remove(link: String, databaseHandler: DatabaseHandler) =
         databaseHandler.runStatement(DatabaseAttributes.DELETE.format(link))
-
-    }
 
     private fun removeEverything(databaseHandler: DatabaseHandler): List<String> {
         val list = databaseHandler.selectAllLinks()
