@@ -1,9 +1,18 @@
 package org.matkija.bot.discordBot.commands.gallerydl
 
+import dev.minn.jda.ktx.interactions.components.primary
+import dev.minn.jda.ktx.interactions.components.row
+import dev.minn.jda.ktx.messages.Embed
 import dev.minn.jda.ktx.messages.editMessage
+import dev.minn.jda.ktx.messages.into
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel.Layout
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
+import net.dv8tion.jda.api.interactions.components.LayoutComponent
+import net.dv8tion.jda.api.interactions.components.buttons.Button
+import okhttp3.Connection
 import org.matkija.bot.abstracts.SlashCommand
 import org.matkija.bot.discordBot.helper.DatabaseAttributes
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
@@ -68,15 +77,23 @@ class GallerydlManager : SlashCommand() {
         event.deferReply().queue()
 
         when (event.subcommandName) {
-            SlashCommandHelper.GALLERY_DL_LIST -> { // TODO: show list with buttons on discord
+            SlashCommandHelper.GALLERY_DL_LIST -> {
 
-                println()
+                var str = ""
 
                 databaseHandler.readData(DatabaseAttributes.SELECT).forEach {
-                    println(it)
+                    str += "%s. <%s> (%s)\n".format(it.id, it.link, it.artist)
                 }
 
-                event.hook.editMessage(content = "Aight, check terminal.").queue()
+                /* TODO: buttons lmao
+                val previous = primary("gdl:previous", emoji = Emoji.fromUnicode("⬅"))
+                val next = primary("gdl:next", emoji = Emoji.fromUnicode("➡"))
+                val comps = row(previous, next).into()
+                */
+
+                event.hook.editMessage(
+                    content = str
+                ).queue()
 
                 return
             }
