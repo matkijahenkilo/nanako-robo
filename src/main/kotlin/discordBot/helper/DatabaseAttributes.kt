@@ -6,10 +6,10 @@ object DatabaseAttributes {
     const val TABLE_NAME = "links"
 
     //attributes
-    private const val ID = "id"
-    private const val LINK = "link"
-    private const val ARTIST = "artist"
-    private const val DATE_ADDED = "dateAdded"
+    const val ID = "id"
+    const val LINK = "link"
+    const val ARTIST = "artist"
+    const val DATE_ADDED = "dateAdded"
 
     //sql
     const val SELECT = "SELECT * FROM $TABLE_NAME"

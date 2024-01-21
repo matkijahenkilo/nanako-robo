@@ -11,13 +11,12 @@ class DatabaseHandler(dbName: String) {
     init {
         val url = "jdbc:sqlite:%s".format(dbName)
         conn = DriverManager.getConnection(url)
-        runStatement(
-            """
-            CREATE TABLE IF NOT EXISTS links (
-                id        INTEGER PRIMARY KEY AUTOINCREMENT,
-                link      varchar(255) NOT NULL,
-                artist    varchar(255),
-                dateAdded date
+        runStatement("""
+            CREATE TABLE IF NOT EXISTS ${DatabaseAttributes.TABLE_NAME} (
+                ${DatabaseAttributes.ID}         INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${DatabaseAttributes.LINK}       varchar(255) NOT NULL,
+                ${DatabaseAttributes.ARTIST}     varchar(255),
+                ${DatabaseAttributes.DATE_ADDED} date
             )
         """.trimIndent()
         )
