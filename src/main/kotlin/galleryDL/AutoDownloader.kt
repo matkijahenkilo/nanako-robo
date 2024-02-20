@@ -6,14 +6,13 @@ import org.matkija.bot.sql.DatabaseHandler
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration.Companion.seconds
 
 
 class AutoDownloader {
 
     private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
-    fun start(databaseHandler: DatabaseHandler, period: Long) {
+    fun start(databaseHandler: DatabaseHandler, period: Long, initialDelay: Long) {
 
         val downloader = Runnable {
             println("Automatically fetching links from database...")
@@ -21,12 +20,7 @@ class AutoDownloader {
             println("Finished downloading everything!")
         }
 
-        val initialDelay: Long = 120
-
-        // initialDelay.seconds prints 2m
-        // while initialDelay.minutes prints 2h
-        // ...confusing
-        println("Downloading contents automatically in ${initialDelay.seconds}")
+        println("Downloading contents automatically in $initialDelay seconds")
 
         scheduler.scheduleAtFixedRate(downloader, initialDelay, period, TimeUnit.SECONDS)
 

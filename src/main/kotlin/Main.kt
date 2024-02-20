@@ -41,6 +41,7 @@ fun main() {
     println("Connecting to discord as an application...")
     println("Logging in as ${bot.name}")
     val jda = light(bot.token, enableCoroutines = true)
+    jda.awaitReady()
 
     SlashCommandHelper.updateCommands(jda)
 
@@ -56,5 +57,5 @@ fun main() {
         }).queue()
     }
 
-    AutoDownloader().start(databaseHandler, 86400) // 24 hours in seconds
+    AutoDownloader().start(databaseHandler, 86400, 3)
 }
