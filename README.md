@@ -31,3 +31,7 @@ Her objective is to save [gallery-dl](https://github.com/mikf/gallery-dl)'s pars
    *With the current `timer` settings, it will start downloading stuff 3 seconds after the bot has started, and it will run the same download function again after 86400 seconds (24 hours).*
 
 4. Run `start.bat` or `java -jar nanako.jar` in a terminal and have fun
+
+### Usage
+
+Use slash commands in the bot's DMs or in a server that it is on.
