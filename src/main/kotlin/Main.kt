@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.matkija.bot.discordBot.commands.gallerydl.GallerydlManager
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
-import org.matkija.bot.galleryDL.AutoDownloader
+import org.matkija.bot.galleryDL.startScheduledTimer
 import org.matkija.bot.sql.DatabaseHandler
 import java.io.File
 import kotlin.system.exitProcess
@@ -15,9 +15,15 @@ import kotlin.system.exitProcess
 @Serializable
 data class Bot(val name: String, val token: String)
 
-private fun getBotsConfig(): List<Bot>? {
+@Serializable
+data class Timer(val initialDelay: Long, val period: Long)
+
+@Serializable
+data class Config(val bot: Bot, val timer: Timer, val path: String)
+
+private fun getBotsConfigs(): List<Config>? {
     try {
-        return Json.decodeFromString<List<Bot>>(File("data/config.json").readText())
+        return Json.decodeFromString<List<Config>>(File("data/config.json").readText())
     } catch (e: Exception) {
         e.printStackTrace()
         return null
@@ -26,13 +32,14 @@ private fun getBotsConfig(): List<Bot>? {
 
 fun main() {
 
-    val bots = getBotsConfig()
+    val configs = getBotsConfigs()
 
-    if (bots!!.equals(null)) {
+    if (configs!!.equals(null)) {
         exitProcess(2)
     }
 
-    val bot = bots[0]
+    val config = configs[0]
+    val bot = config.bot
     val dbName = "${bot.name}.db"
 
     println("Connecting to database $dbName...")
@@ -46,7 +53,7 @@ fun main() {
     SlashCommandHelper.updateCommands(jda)
 
     jda.onCommand(SlashCommandHelper.GALLERY_DL) { event ->
-        GallerydlManager().tryExecute(event, databaseHandler)
+        GallerydlManager(config).tryExecute(event, databaseHandler)
     }
 
     jda.onCommandAutocomplete(SlashCommandHelper.GALLERY_DL) { event ->
@@ -57,5 +64,5 @@ fun main() {
         }).queue()
     }
 
-    AutoDownloader().start(databaseHandler, 86400, 3)
+    startScheduledTimer(databaseHandler, config)
 }

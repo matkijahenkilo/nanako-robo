@@ -4,6 +4,7 @@ import dev.minn.jda.ktx.messages.editMessage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
+import org.matkija.bot.Config
 import org.matkija.bot.abstracts.SlashCommand
 import org.matkija.bot.discordBot.helper.DatabaseAttributes
 import org.matkija.bot.discordBot.helper.SlashCommandHelper
@@ -13,13 +14,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class GallerydlManager : SlashCommand() {
+class GallerydlManager(private val config: Config) : SlashCommand() {
 
     private fun save(link: String, databaseHandler: DatabaseHandler) {
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val date = LocalDateTime.now().format(formatter)
-        val name = Gallerydl().getUserName(link)
+        val name = Gallerydl(config).getUserName(link)
 
         databaseHandler.runStatement(DatabaseAttributes.INSERT.format(link, name, date))
 
@@ -95,7 +96,7 @@ class GallerydlManager : SlashCommand() {
 
                 runBlocking {
                     launch {
-                        Gallerydl().downloadFromList(databaseHandler.selectAll())
+                        Gallerydl(config).downloadFromList(databaseHandler.selectAll())
                     }
                 }
 
@@ -156,7 +157,7 @@ class GallerydlManager : SlashCommand() {
                 event.hook.editMessage(content = "Downloading media from $args...").queue()
 
                 args.forEach {
-                    Gallerydl().download(it)
+                    Gallerydl(config).download(it)
                 }
 
                 event.hook.editMessage(content = "Downloaded media from $args\nNew downloaded files shown in the terminal.")

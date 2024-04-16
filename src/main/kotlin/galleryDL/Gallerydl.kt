@@ -1,21 +1,16 @@
 package org.matkija.bot.galleryDL
 
 import kotlinx.coroutines.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import org.matkija.bot.Config
 import org.matkija.bot.sql.LinksTable
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 
-@Serializable
-data class GallerydlDir(val path: String)
+class Gallerydl(config: Config) {
 
-class Gallerydl {
-
-    private val config = Json.decodeFromString<GallerydlDir>(File("data/gallerydldir.json").readText())
-    private val arguments = "--cookies cookies.txt --ugoira-conv -d ${config.path}"
+    private val arguments = "--cookies cookies.txt --ugoira-conv -d %s".format(config.path)
 
     private suspend fun String.run() {
         try {
